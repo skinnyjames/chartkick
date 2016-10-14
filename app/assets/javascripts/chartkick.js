@@ -664,14 +664,21 @@
           waitForLoaded(function () {
             var options = jsOptions(chart.data, chart.options);
             var data = createDataTable(chart.data, "string");
-            // add annotations
-            var view = new google.visualization.DataView(data);
-            view.setColumns([0,1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation"}]);
 
-            chart.chart = new google.visualization.ColumnChart(chart.element);
-            resize(function () {
-              chart.chart.draw(view, options);
-            });
+            // add annotations column charts that aren't series
+            if(chart.data.length == 1){
+              var view = new google.visualization.DataView(data);
+              view.setColumns([0,1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation"}]);
+              chart.chart = new google.visualization.ColumnChart(chart.element);
+              resize(function () {
+                chart.chart.draw(view, options);
+              });
+            }else{
+              chart.chart = new google.visualization.ColumnChart(chart.element);
+              resize(function () {
+                chart.chart.draw(data, options);
+              });
+            }
           });
         };
 
